@@ -49,6 +49,5 @@
     <Compile Include="Requirement.cs" />
     <Compile Include="Student.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
