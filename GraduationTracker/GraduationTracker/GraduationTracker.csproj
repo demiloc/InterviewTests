@@ -49,5 +49,11 @@
     <Compile Include="Requirement.cs" />
     <Compile Include="Student.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Implementations\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Types\" />
+    <Folder Include="Utilities\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

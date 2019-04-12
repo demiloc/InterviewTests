@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GraduationTracker
 {
-    public class Repository
+    public static class Repository
     {
         public static Student GetStudent(int id)
         {
@@ -78,6 +78,7 @@ namespace GraduationTracker
                     new Requirement{Id = 104, Name = "Physichal Education", MinimumMark=50, Courses = new int[]{4}, Credits=1 }
                 };
         }
+
         private static Student[] GetStudents()
         {
             return new[]

@@ -10,6 +10,7 @@ namespace GraduationTracker
     {
         public int Id { get; set; }
         public Course[] Courses { get; set; }
+        public int Credits { get; set; } = 0;
         public STANDING Standing { get; set; } = STANDING.None;
     }
 }

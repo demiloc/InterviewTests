@@ -6,16 +6,46 @@ using System.Threading.Tasks;
 
 namespace GraduationTracker
 {
-    public partial class GraduationTracker
+    public static class GraduationTracker
     {   
-        public Tuple<bool, STANDING>  HasGraduated(Diploma diploma, Student student)
+        public static Tuple<bool, STANDING> HasGraduated(Diploma diploma, Student student)
         {
-            var credits = 0;
-            var average = 0;
-        
-            for(int i = 0; i < diploma.Requirements.Length; i++)
+            int average = CalculateAverage(diploma, student) / student.Courses.Length;
+            bool reqCreditsEarned = RequiredCreditsEarned(diploma, student);
+            student.Standing = DetermineStanding(average, reqCreditsEarned);
+
+            return new Tuple<bool, STANDING>(reqCreditsEarned && student.Standing > STANDING.Remedial, student.Standing);
+        }
+
+        private static bool RequiredCreditsEarned(Diploma diploma, Student student)
+        {
+            return student.Credits >= diploma.Credits;
+        }
+
+        private static STANDING DetermineStanding(int average, bool reqCreditsEarned)
+        {
+            STANDING standing;
+            if (reqCreditsEarned) {
+                if (average < 50)
+                    standing = STANDING.Remedial;
+                else if (average < 80)
+                    standing = STANDING.Average;
+                else if (average < 95)
+                    standing = STANDING.MagnaCumLaude;
+                else
+                    standing = STANDING.SumaCumLaude;
+            } else
+                standing = STANDING.Remedial;
+            return standing;
+        }
+
+        private static int CalculateAverage(Diploma diploma, Student student)
+        {
+            int average = 0;
+
+            for (int i = 0; i < diploma.Requirements.Length; i++)
             {
-                for(int j = 0; j < student.Courses.Length; j++)
+                for (int j = 0; j < student.Courses.Length; j++)
                 {
                     var requirement = Repository.GetRequirement(diploma.Requirements[i]);
 
@@ -24,42 +54,17 @@ namespace GraduationTracker
                         if (requirement.Courses[k] == student.Courses[j].Id)
                         {
                             average += student.Courses[j].Mark;
-                            if (student.Courses[j].Mark > requirement.MinimumMark)
+
+                            if (student.Courses[j].Mark >= requirement.MinimumMark)
                             {
-                                credits += requirement.Credits;
+                                student.Credits += requirement.Credits;
                             }
                         }
                     }
                 }
             }
 
-            average = average / student.Courses.Length;
-
-            var standing = STANDING.None;
-
-            if (average < 50)
-                standing = STANDING.Remedial;
-            else if (average < 80)
-                standing = STANDING.Average;
-            else if (average < 95)
-                standing = STANDING.MagnaCumLaude;
-            else
-                standing = STANDING.MagnaCumLaude;
-
-            switch (standing)
-            {
-                case STANDING.Remedial:
-                    return new Tuple<bool, STANDING>(false, standing);
-                case STANDING.Average:
-                    return new Tuple<bool, STANDING>(true, standing);
-                case STANDING.SumaCumLaude:
-                    return new Tuple<bool, STANDING>(true, standing);
-                case STANDING.MagnaCumLaude:
-                    return new Tuple<bool, STANDING>(true, standing);
-
-                default:
-                    return new Tuple<bool, STANDING>(false, standing);
-            } 
+            return average;
         }
     }
 }

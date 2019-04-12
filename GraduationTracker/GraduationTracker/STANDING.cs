@@ -3,10 +3,10 @@
     public enum STANDING
     {
         None,
-        SumaCumLaude,
-        MagnaCumLaude,
+        Remedial,
         Average,
-        Remedial
+        MagnaCumLaude,
+        SumaCumLaude
     }
 
 }
